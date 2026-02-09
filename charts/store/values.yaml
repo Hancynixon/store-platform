@@ -1,0 +1,113 @@
+# ==============================
+# Store Helm Chart - Clean Config
+# Urumi Round 1 - Demo Ready
+# ==============================
+
+replicaCount: 1
+
+# ------------------------------
+# WordPress Image
+# ------------------------------
+image:
+  repository: bitnami/wordpress
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+# ------------------------------
+# Service Account
+# ------------------------------
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# ------------------------------
+# Pod metadata
+# ------------------------------
+podAnnotations: {}
+podLabels: {}
+
+# ------------------------------
+# Security (safe defaults)
+# ------------------------------
+podSecurityContext: {}
+
+securityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+
+# ------------------------------
+# Service
+# ------------------------------
+service:
+  type: ClusterIP
+  port: 80
+
+# ------------------------------
+# Ingress (VERY IMPORTANT)
+# This enables:
+# http://<store>.localhost
+# Backend overrides host dynamically
+# ------------------------------
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+
+  hosts:
+    - host: store.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls: []
+
+# ------------------------------
+# Health checks
+# ------------------------------
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+# ------------------------------
+# Resources (good practice for multi-tenant)
+# Interviewers LOVE this
+# ------------------------------
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# ------------------------------
+# Autoscaling (not needed now)
+# ------------------------------
+autoscaling:
+  enabled: false
+
+# ------------------------------
+# Scheduling
+# ------------------------------
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# ------------------------------
+# Extra volumes
+# ------------------------------
+volumes: []
+volumeMounts: []
